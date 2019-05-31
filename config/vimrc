@@ -1,0 +1,72 @@
+silent! nmap <C-n> :NERDTreeToggle<CR>
+
+" down means down
+nmap j gj
+nmap k gk
+
+" quickly move between windows
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
+
+" remove trailing whitespace
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+" autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
+" resize panes when window resizes
+autocmd VimResized * :wincmd =
+
+set linebreak " break lone lines by word
+set hlsearch " highlight all search terms
+silent! set mouse=nvc " use mouse, but not in insert mode
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+
+set ignorecase
+set smartcase
+
+set ruler
+set number
+set cc=120
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+
+syntax enable
+let g:solarized_termcolors=256
+set background=light
+colorscheme solarized
+
+" Ctrl-l to fix last spelling mistake
+setlocal spell
+set spelllang=nl,en_gb
+inoremap <C-i> <c-g>u<Esc>[s1z=`]a<c-g>u
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'lervag/vimtex'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'Valloric/YouCompleteMe'
+Plug 'w0rp/ale'
+
+call plug#end()
+
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_config.py'
+let g:ycm_show_diagnostics_ui = 0
+
+let g:ycm_add_preview_to_completeopt = 1
+set completeopt-=preview
+
+if has("gui_running")
+  autocmd VimLeave * :!open -a Terminal
+endif
